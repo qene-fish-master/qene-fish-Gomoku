@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>青魚五子棋(新)</title>
+<title>青魚五子棋</title>
 <meta name="theme-color" content="#f4f1ea">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
@@ -9,17 +9,20 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="青魚五子棋">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="color-scheme" content="light dark">
 <style>
-:root{--bg:#f4f1ea;--fg:#2a2a2a;--card:#fff;--ac:#1f6f8b;--bd:#d8d2c4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17202a;--fg:#e8e6e1;--card:#202c38;--ac:#5fb3d0;--bd:#33424f}}
-:root[data-theme="dark"]{--bg:#17202a;--fg:#e8e6e1;--card:#202c38;--ac:#5fb3d0;--bd:#33424f}
+:root{color-scheme:light dark;--bar:#1f6f8b;--bg:#f4f1ea;--fg:#2a2a2a;--card:#fff;--ac:#1f6f8b;--bd:#d8d2c4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bar:#17202a;--bg:#17202a;--fg:#e8e6e1;--card:#202c38;--ac:#5fb3d0;--bd:#33424f}}
+:root[data-theme="light"]{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark;--bar:#17202a;--bg:#17202a;--fg:#e8e6e1;--card:#202c38;--ac:#5fb3d0;--bd:#33424f}
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--bar);z-index:8;pointer-events:none}
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);background:var(--bg);color:var(--fg);font:15px/1.6 system-ui,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
 .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;padding-right:12px}#ck{margin-top:12px;text-align:right;font-size:13px;line-height:1.5;font-variant-numeric:tabular-nums}#ck b{color:var(--ac)}#fish{cursor:pointer;user-select:none}
 h1{margin:10px 12px 0;font-size:24px;color:var(--ac)}h1 small{font-size:13px;color:var(--fg);opacity:.6;margin-left:8px}
-.wrap{display:flex;flex-wrap:wrap;gap:14px;padding:10px 12px;max-width:1100px;margin:auto}
-canvas{border-radius:6px;box-shadow:0 2px 10px #0004;touch-action:manipulation;max-width:100%;height:auto;aspect-ratio:1}
+.wrap{display:flex;flex-wrap:wrap;gap:14px;padding:10px 12px;max-width:1400px;margin:auto;justify-content:center}
+canvas{border-radius:6px;box-shadow:0 2px 10px #0004;touch-action:manipulation;max-width:100%;height:auto;aspect-ratio:1;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 .side{flex:1;min-width:280px;display:flex;flex-direction:column;gap:10px}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px 12px}
 .card h3{margin:0 0 6px;font-size:14px;opacity:.75}
@@ -32,6 +35,7 @@ button:hover{border-color:var(--ac)}button.p{background:var(--ac);color:#fff;bor
 #md{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:9;padding:12px}
 #md>div{background:var(--card);max-width:640px;max-height:88vh;overflow:auto;border-radius:12px;padding:16px 20px}
 #md h2{margin:0 0 6px;color:var(--ac)}#md h4{margin:12px 0 2px}#md p{margin:2px 0}
+a.btn{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--bd);border-radius:7px;padding:5px 10px;text-decoration:none;display:inline-block}a.btn:hover{border-color:var(--ac)}
 button:disabled{opacity:.45;cursor:not-allowed}
 #fsbar{display:none}body.fsb #fsbar{display:flex}
 body.fsb .hd,body.fsb .card.op,body.fsb #ctl,body.fsb #log,body.fsb #hint{display:none}
@@ -51,7 +55,7 @@ body.fsb.ls .wrap{flex-wrap:nowrap}body.fsb.ls .side{flex:0 0 190px}
 <select id="mode"><option value="1">單人・我執黑</option><option value="2">單人・我執白</option><option value="0">雙人對弈</option><option value="3">巴巴博弈（電腦對電腦）</option><option value="4">技能五子棋（雙人）</option></select>
 <select id="lv"><option value="0">簡單</option><option value="1" selected>普通</option><option value="2">困難</option></select><select id="lv2" style="display:none" title="白棋電腦強度"><option value="0">白：簡單</option><option value="1">白：普通</option><option value="2" selected>白：困難</option></select><select id="ru"><option value="1">有禁手（連珠）</option><option value="0">無禁手（自由）</option></select>
 <button class="p" onclick="go()">▶ 開始對局</button><button onclick="nw()">新局</button><select id="th" onchange="setTheme(this.value)" title="主題"><option value="">主題：跟隨系統</option><option value="light">白色</option><option value="dark">黑色</option></select><button onclick="undo()">悔棋</button><button id="ins" style="display:none" onclick="inst()">📲 安裝</button>
-<button onclick="$('#md').style.display='flex'">📖 教學</button><button onclick="tf()">⛶ 棋盤全螢幕</button>
+<button onclick="$('#md').style.display='flex'">📖 教學</button><button onclick="tf()">⛶ 棋盤全螢幕</button><a class="btn" href="https://qene-fish-master.github.io/qene-fish-Gomoku-Classic/" target="_blank" rel="noopener">🕰 舊版</a>
 <label><input type="checkbox" id="fb" checked onchange="draw()"> 顯示禁手</label> <label><input type="checkbox" id="sg" checked onchange="showHint();draw()"> 顯示建議</label> <label><input type="checkbox" id="tk" checked onchange="if(!this.checked&&cvc){$('#hint').textContent='';hp=null;draw()}status()"> 電腦思考提示</label> <label><input type="checkbox" id="fs" onchange="if(this.checked&&cvc){$('#hint').textContent='';hp=null;draw()}status()"> ⚡ 極速（電腦0.1秒內）</label></div></div>
 <div class="card op"><h3>直止打法（白2在黑1正上方）</h3><div class="row" id="od"></div>
 <h3 style="margin-top:8px">斜止打法（白2在黑1右上斜角）</h3><div class="row" id="oi"></div>
@@ -84,7 +88,7 @@ const DP=[[0,2],[1,2],[2,2],[1,1],[2,1],[1,0],[2,0],[0,-1],[1,-1],[2,-1],[0,-2],
 IP=[[2,2],[1,2],[0,2],[-1,2],[-2,2],[0,1],[-1,1],[-2,1],[-1,0],[-2,0],[-1,-1],[-2,-1],[-2,-2]];
 let bd,turn,hist,over,mode,me,S,C,fr=1,tm,cvc=0,t0=Date.now(),te=0,base=0,sk=0,pend=null,seal=null,nl=0,skl={},fsm=0;function sched(){tm=setTimeout(ai,$('#fs').checked?10:$('#tk').checked?(cvc?900:600):60)}
 let dp=0,st=0,started=0,hp=null;function explain(r,c,p,a,d){bd[r][c]=p;const x=an(r,c,p);bd[r][c]=0;return a>=1e6?'可以連成五子，直接獲勝！':d>=1e6?'對手下在這裡就會連五，必須擋住！':x.f&&x.t?'形成「四三」，威力強大':x.nm.length?'形成'+x.nm.join('・'):d>=500?'封堵對手的進攻點（對手下這裡會形成四或活三）':'擴展形勢、靠近中央'}
-function showHint(){hp=null;const h=$('#hint');if(!cvc||over)h.textContent='';if(sk||!started||over||cvc||!$('#sg').checked||(mode&&turn!=me))return;if(!hist.length){hp=[7,7];h.textContent='💡 建議：先下天元 H8，搶佔中央。';return}const p=turn,q=3-p;let b=null;for(const[r,c]of cand()){if(p==B&&foul(r,c))continue;const a=sc(r,c,p),d=(q==B&&foul(r,c))?0:sc(r,c,q),v=a+d*.95-Math.hypot(r-7,c-7);if(!b||v>b.v)b={v,r,c,a,d}}if(!b)return;const{r,c,a,d}=b;hp=[r,c];const why=explain(r,c,p,a,d);h.textContent='💡 建議：'+(p==B?'黑':'白')+'棋下 '+'ABCDEFGHIJKLMNO'[c]+(15-r)+'（'+why+'）'}function setTheme(v){if(v)document.documentElement.dataset.theme=v;else delete document.documentElement.dataset.theme;const d=v=='dark'||(!v&&matchMedia('(prefers-color-scheme:dark)').matches),m=document.querySelector('meta[name=theme-color]');if(m)m.content=d?'#17202a':'#f4f1ea'}function go(){if(started||over)return;started=1;t0=Date.now();status();draw();if(mode&&turn!=me)sched()}const cv=$('#cv'),cx=cv.getContext('2d');
+function showHint(){hp=null;const h=$('#hint');if(!cvc||over)h.textContent='';if(sk||!started||over||cvc||!$('#sg').checked||(mode&&turn!=me))return;if(!hist.length){hp=[7,7];h.textContent='💡 建議：先下天元 H8，搶佔中央。';return}const p=turn,q=3-p;let b=null;for(const[r,c]of cand()){if(p==B&&foul(r,c))continue;const a=sc(r,c,p),d=(q==B&&foul(r,c))?0:sc(r,c,q),v=a+d*.95-Math.hypot(r-7,c-7);if(!b||v>b.v)b={v,r,c,a,d}}if(!b)return;const{r,c,a,d}=b;hp=[r,c];const why=explain(r,c,p,a,d);h.textContent='💡 建議：'+(p==B?'黑':'白')+'棋下 '+'ABCDEFGHIJKLMNO'[c]+(15-r)+'（'+why+'）'}function setTheme(v){try{localStorage.setItem('qy-theme',v||'')}catch(x){}if(v)document.documentElement.dataset.theme=v;else delete document.documentElement.dataset.theme;const d=v=='dark'||(!v&&matchMedia('(prefers-color-scheme:dark)').matches),m=document.querySelector('meta[name=theme-color]');if(m)m.content=d?'#17202a':'#f4f1ea'}function go(){if(started||over)return;started=1;t0=Date.now();status();draw();if(mode&&turn!=me)sched()}const cv=$('#cv'),cx=cv.getContext('2d');
 const g=(r,c)=>r<0||c<0||r>=N||c>=N?-1:bd[r][c];
 function run(r,c,dr,dc){const p=bd[r][c];let a=0,b=0;while(g(r-(a+1)*dr,c-(a+1)*dc)==p)a++;while(g(r+(b+1)*dr,c+(b+1)*dc)==p)b++;return[a+b+1,a,b]}
 function fl(r,c,p,dr,dc){const o=[];for(let k=-4;k<=4;k++){const x=r+k*dr,y=c+k*dc;if(g(x,y)!=0)continue;bd[x][y]=p;const[n,a,b]=run(x,y,dr,dc);bd[x][y]=0;if((p==W||!fr?n>=5:n==5)&&-k>=-a&&-k<=b)o.push([x,y])}return o}
@@ -168,16 +172,17 @@ function draw(){if(!bd)return;cx.fillStyle='#e0b25c';cx.fillRect(0,0,S,S);cx.str
  if(hp){cx.strokeStyle='#1f6f8b';cx.lineWidth=3;cx.beginPath();cx.arc(C*(hp[1]+1),C*(hp[0]+1),C*.3,0,7);cx.stroke()}
  if(fr&&!over&&turn==B&&$('#fb').checked&&(!mode||me==B)){cx.strokeStyle='#d00';cx.lineWidth=2;const k=C*.17;
   for(const[r,c]of cand())if(foul(r,c)){const x=C*(c+1),y=C*(r+1);cx.beginPath();cx.moveTo(x-k,y-k);cx.lineTo(x+k,y+k);cx.moveTo(x+k,y-k);cx.lineTo(x-k,y+k);cx.stroke()}}}
-function size(){const w=$('.wrap'),ls=!!fsm&&innerWidth>innerHeight*1.2;document.body.classList.toggle('ls',ls);let m;
- if(fsm){const rs=getComputedStyle(document.documentElement),ph=(parseFloat(rs.paddingTop)||0)+(parseFloat(rs.paddingBottom)||0),sd=$('.side');
+function size(){const w=$('.wrap'),ls=!!fsm&&innerWidth>innerHeight*1.2,rs=getComputedStyle(document.documentElement),ph=(parseFloat(rs.paddingTop)||0)+(parseFloat(rs.paddingBottom)||0);document.body.classList.toggle('ls',ls);let m;
+ if(fsm){const sd=$('.side');
   m=ls?Math.min(innerHeight-ph-16,w.clientWidth-190-8-16):Math.min(w.clientWidth-16,innerHeight-ph-16-(sd.offsetHeight||0)-8-6);m=Math.min(m,1400)}
- else m=Math.min(w.clientWidth-24,640);
+ else{const av=w.clientWidth-24,hl=innerHeight-ph-($('.hd').offsetHeight||0)-24;
+  m=av>=840?Math.max(Math.min(av-14-290,hl,1000),360):Math.min(av,900,Math.max(hl,360))}
  S=Math.max(200,Math.floor(m));C=S/16;const d=devicePixelRatio||1;cv.width=cv.height=S*d;cv.style.width=S+'px';cv.style.height='';cx.setTransform(d,0,0,d,0,0);draw()}
 cv.onclick=e=>{const b=cv.getBoundingClientRect(),c=Math.round((e.clientX-b.left)*(S/b.width)/C-1),r=Math.round((e.clientY-b.top)*(S/b.height)/C-1);
  if(r<0||c<0||r>=N||c>=N||over||(mode&&turn!=me))return;if(!started){say('請先按「▶ 開始對局」');return}act(r,c)};
 [['od',DN,DP,0],['oi',IN,IP,1]].forEach(([id,ns,ps,w])=>ns.forEach((n,i)=>{const b=document.createElement('button');b.textContent=n;b.onclick=()=>nw([...ps[i],w]);$('#'+id).append(b)}));
 $('#mode').onchange=$('#ru').onchange=()=>nw();addEventListener('resize',size);
-const fm=new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',hour12:false,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+const fm=new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
 function tick(){if(over&&!te)te=Date.now();const e=!started?0:Math.floor(((over&&te?te:Date.now())-t0)/1000),z=x=>String(x).padStart(2,'0');
  let t='';try{t=fm.format(new Date())}catch(x){t=new Date().toLocaleString()}
  $('#ck').innerHTML='台北標準時間 (UTC+8)<br><b>'+t+'</b><br>本局對局時間 <b>'+z(e/60|0)+':'+z(e%60)+'</b>'+(over?'（已結束）':'')}
@@ -191,5 +196,8 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();ip=e;if(!sa())$('#
 addEventListener('appinstalled',()=>{ip=null;$('#ins').style.display='none'});
 function inst(){if(!ip)return;const p=ip;ip=null;$('#ins').style.display='none';try{p.prompt()}catch(x){}}
 if('serviceWorker'in navigator&&/^https?:$/.test(location.protocol))addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});
+try{const v=localStorage.getItem('qy-theme');if(v){$('#th').value=v;setTheme(v)}else setTheme('')}catch(x){setTheme('')}
+try{matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>setTheme($('#th').value))}catch(x){}
+addEventListener('orientationchange',()=>setTimeout(size,250));
 size();nw();
 </script></body></html>
