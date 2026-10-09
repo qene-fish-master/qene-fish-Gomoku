@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>青魚五子棋（新）</title>
+<title>青魚五子棋</title>
 <meta name="theme-color" content="#f4f1ea">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
@@ -45,7 +45,7 @@ body.fsb.ls .wrap{flex-wrap:nowrap}body.fsb.ls .side{flex:0 0 190px}
 #ski{font-size:13px;line-height:1.6}
 .t{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:14px}.t b{color:var(--ac);white-space:nowrap}
 </style></head><body>
-<div class="hd"><h1><span id="fish">🐟</span> 青魚五子棋<small>15×15 連珠規則・黑棋禁手</small></h1><div id="ck"></div></div>
+<div class="hd"><h1><span id="fish">🐟</span> 青魚五子棋<small>15×15・可選連珠禁手規則</small></h1><div id="ck"></div></div>
 <div class="wrap">
 <canvas id="cv"></canvas>
 <div class="side">
@@ -53,10 +53,10 @@ body.fsb.ls .wrap{flex-wrap:nowrap}body.fsb.ls .side{flex:0 0 190px}
 <div class="card" id="skc" style="display:none"><h3>技能五子棋（無禁手規則，每項技能每人限用一次）</h3><div id="ski"></div><div class="row" id="skb" style="margin-top:6px"></div><div style="font-size:12px;opacity:.65;margin-top:6px">🎯 雙管齊下：這回合連下兩子　💨 飛沙走石：移除對手一子　🔒 封印：封鎖一個空點，對手下一回合不能下。技能模式不能悔棋。</div></div>
 <div class="card" id="ctl"><div class="row">
 <select id="mode"><option value="1">單人・我執黑</option><option value="2">單人・我執白</option><option value="0">雙人對弈</option><option value="3">巴巴博弈（電腦對電腦）</option><option value="4">技能五子棋（雙人）</option></select>
-<select id="lv"><option value="0">簡單</option><option value="1" selected>普通</option><option value="2">困難</option></select><select id="lv2" style="display:none" title="白棋電腦強度"><option value="0">白：簡單</option><option value="1">白：普通</option><option value="2" selected>白：困難</option></select><select id="ru"><option value="1">有禁手（連珠）</option><option value="0">無禁手（自由）</option></select>
+<select id="lv"><option value="0">簡單</option><option value="1" selected>普通</option><option value="2">困難</option></select><select id="lv2" style="display:none" title="白棋電腦強度"><option value="0">白：簡單</option><option value="1">白：普通</option><option value="2" selected>白：困難</option></select><select id="ru"><option value="1">有禁手（連珠）</option><option value="0" selected>無禁手（自由）</option></select>
 <button class="p" onclick="go()">▶ 開始對局</button><button onclick="nw()">新局</button><select id="th" onchange="setTheme(this.value)" title="主題"><option value="">主題：跟隨系統</option><option value="light">白色</option><option value="dark">黑色</option></select><button onclick="undo()">悔棋</button><button id="ins" style="display:none" onclick="inst()">📲 安裝</button>
 <button onclick="$('#md').style.display='flex'">📖 教學</button><button onclick="tf()">⛶ 棋盤全螢幕</button><a class="btn" href="https://qene-fish-master.github.io/qene-fish-Gomoku-Classic/" target="_blank" rel="noopener">🕰 舊版</a>
-<label><input type="checkbox" id="fb" checked onchange="draw()"> 顯示禁手</label> <label><input type="checkbox" id="sg" checked onchange="showHint();draw()"> 顯示建議</label> <label><input type="checkbox" id="tk" checked onchange="if(!this.checked&&cvc){$('#hint').textContent='';hp=null;draw()}status()"> 電腦思考提示</label> <label><input type="checkbox" id="fs" onchange="if(this.checked&&cvc){$('#hint').textContent='';hp=null;draw()}status()"> ⚡ 極速（電腦0.1秒內）</label></div></div>
+<label><input type="checkbox" id="fb" onchange="draw()"> 顯示禁手</label> <label><input type="checkbox" id="sg" onchange="showHint();draw()"> 顯示建議</label> <label><input type="checkbox" id="tk" onchange="if(!this.checked&&cvc){$('#hint').textContent='';hp=null;draw()}status()"> 電腦思考提示</label> <label><input type="checkbox" id="fs" onchange="if(this.checked&&cvc){$('#hint').textContent='';hp=null;draw()}status()"> ⚡ 極速（電腦0.1秒內）</label></div></div>
 <div class="card op"><h3>直止打法（白2在黑1正上方）</h3><div class="row" id="od"></div>
 <h3 style="margin-top:8px">斜止打法（白2在黑1右上斜角）</h3><div class="row" id="oi"></div>
 <div style="font-size:12px;opacity:.65;margin-top:6px">按下即擺出前三手（黑1·白2·黑3），輪到白棋下第4手。</div></div>

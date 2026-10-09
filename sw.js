@@ -1,5 +1,5 @@
 // 青魚五子棋 Service Worker：離線可玩。更新程式時請把 VERSION 加一。
-const VERSION='v3';
+const VERSION='v4';
 const CACHE='qingyu-gomoku-'+VERSION;
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png','./icons/apple-touch-icon.png'];
 
